@@ -7,7 +7,7 @@ from variable import *
 
 def create_plot(option, figsize):
     file = get_office_file(option)
-    page_num = 0
+    page_num = st.session_state['graph1_page_num']
     bar_per_page = 8
 
     df = pd.read_csv(file, encoding='cp949').dropna()
@@ -21,6 +21,12 @@ def create_plot(option, figsize):
     arrest = df[df['발생검거'] == '검거']
     arrest = arrest.set_index('구분').loc[office_list, :].reset_index()
     arrest_list = arrest.loc[:, '건수'].to_numpy()
+
+    pages = len(office_list) // bar_per_page
+    if len(office_list) % bar_per_page != 0:
+        pages += 1
+    st.session_state['graph1_max_page_num'] = pages
+    print(f"pages: {st.session_state['graph1_max_page_num']}")
 
     cur_index = page_num * bar_per_page
     show_office_list = office_list[cur_index: cur_index + bar_per_page]
@@ -51,7 +57,12 @@ def create_plot(option, figsize):
 
 def graph1(figsize):
     KEY = "graph1_key"
-    t1, t2 = st.columns([0.2, 0.8])
+    if 'graph1_page_num' not in st.session_state:
+        st.session_state['graph1_page_num'] = 0
+    if 'graph1_max_page_num' not in st.session_state:
+        st.session_state['graph1_max_page_num'] = 2
+    t1, t2, left_btn, cur_page, right_btn, padding = st.columns(
+        [0.2, 0.66, 0.04, 0.04, 0.04, 0.02])
     with t1:
         option = st.selectbox(
             '',
@@ -63,6 +74,37 @@ def graph1(figsize):
 
     with t2:
         st.markdown("### 경찰서별 검거율")
+
+    with left_btn:
+        # add before and next button if is not first or last page
+        if st.button('◀', key='before'):
+            if st.session_state['graph1_page_num'] > 0:
+                st.session_state['graph1_page_num'] -= 1
+                print(f"cur page: {st.session_state['graph1_page_num']}")
+                print(f'max page: {st.session_state["graph1_max_page_num"]}')
+                st.experimental_rerun()
+
+    with cur_page:
+        # add current page number with fontSize 20px
+        st.markdown(
+            f"""<div style="font-size:20px;font-weight: semibold;padding-left:16px;padding-top:3px;">{st.session_state['graph1_page_num'] + 1}</div> """,
+            unsafe_allow_html=True,
+        )
+
+    with right_btn:
+        if st.button('▶', key='next'):
+            if st.session_state['graph1_max_page_num'] - 1 > st.session_state['graph1_page_num']:
+                st.session_state['graph1_page_num'] += 1
+                print(f"cur page: {st.session_state['graph1_page_num']}")
+                print(f'max page: {st.session_state["graph1_max_page_num"]}')
+                st.experimental_rerun()
+
+    with padding:
+        # set width 10px div
+        st.markdown(
+            f"""<div style="height:1px;width:10px;border:none;" /> """,
+            unsafe_allow_html=True,
+        )
 
     fig = create_plot(option, figsize)
     st.pyplot(fig)
