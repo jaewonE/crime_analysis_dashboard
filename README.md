@@ -2,6 +2,8 @@
 
 범죄 데이터셋 데이터 시각화
 
+github: https://github.com/jaewonE/crime_analysis_dashboard
+
 ### 팀원
 
 * 201904008 곽재원
