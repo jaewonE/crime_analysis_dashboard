@@ -26,7 +26,7 @@ def fontRegistered():
     fm._load_fontmanager(try_read_cache=False)
 
 
-def devider(width):
+def divider(width):
     return st.markdown(f"""<div style="height:1px;width:{width}px;border:none;color:#DEE1E6;background-color:#DEE1E6;" /> """, unsafe_allow_html=True)
 
 
@@ -34,8 +34,8 @@ fontRegistered()
 plt.rc('font', family='NanumGothic')
 
 st.markdown('# 서울시 범죄 현황 분석')
-devider(1668)
-left_layout, right_layout = st.columns(2)
+divider(1668)
+left_layout, div, right_layout = st.columns([0.5, 0.01, 0.49])
 st.markdown(
     """
     <style>
@@ -49,12 +49,16 @@ st.markdown(
 
 with left_layout:
     graph1(figsize=(10, 4))
-    devider(780)
+    divider(795)
     graph2(figsize=(10, 3))
-    devider(780)
+    divider(795)
     graph3(figsize=(10, 5))
+
+with div:
+    st.markdown(f"""<div style="height:1330px;width:1px;border:none;color:#DEE1E6;background-color:#DEE1E6;" /> """,
+                unsafe_allow_html=True)
 
 with right_layout:
     show_map(right_layout, width=850, height=520)
-    devider(850)
+    divider(850)
     graph4(width=850, height=580)

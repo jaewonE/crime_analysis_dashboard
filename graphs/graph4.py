@@ -11,6 +11,7 @@ def create_plot(option, width, height):
     crime_data = pd.read_csv(
         file_path, encoding='cp949').dropna().drop(columns='범죄명')
     crime_data = crime_data.groupby('장소').sum().reset_index()
+    crime_data = crime_data[crime_data['장소'] != '기타']
 
     # Create a treemap
     fig = px.treemap(crime_data, path=[px.Constant(
