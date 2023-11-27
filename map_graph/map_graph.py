@@ -9,14 +9,18 @@ from streamlit_folium import folium_static
 import plotly.express as px
 import random
 import os
+from variable import *
 
-main_dir = os.path.join(os.getcwd().split("crime_analysis_dashboard")[0], 'crime_analysis_dashboard')
+main_dir = os.path.join(os.getcwd().split("crime_analysis_dashboard")[
+                        0], 'crime_analysis_dashboard')
 csv_dir = os.path.join(main_dir, 'dataset', 'crime_by_office')
 json_dir = os.path.join(main_dir, 'map_graph', 'cache')
 csv_prefix = "경찰청_서울특별시지방경찰청_관서별 5대범죄 발생 및 검거 현황"
 
-office_location_path = os.path.join(main_dir, 'map_graph', 'office_location.csv')
-geojson_path = os.path.join(main_dir, 'dataset', 'seoul_municipalities_geo_simple.json')
+office_location_path = os.path.join(
+    main_dir, 'map_graph', 'office_location.csv')
+geojson_path = os.path.join(
+    main_dir, 'dataset', 'seoul_municipalities_geo_simple.json')
 
 
 def get_crime_data(year):
@@ -32,7 +36,7 @@ def get_crime_data(year):
     return act_count.astype(np.int64).to_dict()['건수']
 
 
-def show_map(layout):
+def show_map(layout, width, height):
     KEY = "map_graph_key"
     location_df = pd.read_csv(office_location_path).set_index('office')
 
@@ -40,7 +44,7 @@ def show_map(layout):
     with t1:
         option = st.selectbox(
             '',
-            options=[2016, 2017, 2018, 2019, 2020, 2021],
+            options=year_options,
             index=0,
             key=KEY,
             format_func=lambda x: f'{x}년'
@@ -59,7 +63,7 @@ def show_map(layout):
         style_function=lambda x: {
             'color': '#D3BCD9',  # Light blue color
             'weight': 2,         # Thinner line
-            'fillOpacity': 0.35   # Lower fill opacity
+            'fillOpacity': 0.4   # Lower fill opacity
         }
     ).add_to(seoul_map)
 
@@ -74,7 +78,7 @@ def show_map(layout):
             color=None,  # No border
             fill=True,
             fill_color='#6FA3CC',
-            fill_opacity=0.8,
+            fill_opacity=0.7,
             tooltip=f'{station}: {count}건'
         ).add_to(seoul_map)
         # Calculate offset for text to be in the center of the circle
@@ -93,4 +97,4 @@ def show_map(layout):
     #     """<div style = "height: 30px;" />""",
     #     unsafe_allow_html=True,
     # )
-    folium_static(seoul_map, height=250*3)
+    folium_static(seoul_map, width=width, height=height)

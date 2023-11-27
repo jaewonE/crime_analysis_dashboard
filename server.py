@@ -1,14 +1,17 @@
 import matplotlib.pyplot as plt
 import matplotlib.font_manager as fm  # 폰트 관련 용도 as fm
 from map_graph.map_graph import show_map
-from graph_col3 import show_graph3
-from graph_col2 import show_graph2
-from graph_col1 import show_graph1
+from graphs.graph1 import graph1
+from graphs.graph2 import graph2
+from graphs.graph3 import graph3
+from graphs.graph4 import graph4
 import sys
 import streamlit as st
 import numpy as np
 import os
+
 sys.path.append('.')
+st.set_page_config(layout="wide")
 
 
 @st.cache_data
@@ -23,12 +26,16 @@ def fontRegistered():
     fm._load_fontmanager(try_read_cache=False)
 
 
-st.set_page_config(layout="wide")
+def devider(width):
+    return st.markdown(f"""<div style="height:1px;width:{width}px;border:none;color:#DEE1E6;background-color:#DEE1E6;" /> """, unsafe_allow_html=True)
+
 
 fontRegistered()
 plt.rc('font', family='NanumGothic')
 
-left_layout, right_layout = st.columns([0.6, 0.4])
+st.markdown('# 서울시 범죄 현황 분석')
+devider(1668)
+left_layout, right_layout = st.columns(2)
 st.markdown(
     """
     <style>
@@ -41,9 +48,13 @@ st.markdown(
 )
 
 with left_layout:
-    show_graph1(left_layout)
-    show_graph2(left_layout)
-    show_graph3(left_layout)
+    graph1(figsize=(10, 4))
+    devider(780)
+    graph2(figsize=(10, 3))
+    devider(780)
+    graph3(figsize=(10, 5))
 
 with right_layout:
-    show_map(right_layout)
+    show_map(right_layout, width=850, height=520)
+    devider(850)
+    graph4(width=850, height=580)
