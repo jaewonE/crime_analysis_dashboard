@@ -1,0 +1,6 @@
+fonts/*
+__pycache__/*
+**/__pycache__/*
+
+dataset/*
+map_graph/office_location.csv
