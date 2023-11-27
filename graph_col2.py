@@ -103,27 +103,27 @@ def show_graph2(layout):
 
     t1, t2, t3, t4 = st.columns([0.2, 0.3, 0.2, 0.3])
     with t1:
-        option = st.selectbox(
+        option1 = st.selectbox(
             '',
             options=guilty_list,
             index=0,
             key="graph2_key",
             # format_func=lambda x: f'{x}년'
         )
-        print(f'option: {option}')
+        print(f'option: {option1}')
 
     with t2:
         st.markdown("### 연도별 범죄 발생 건수")
 
     with t3:
-        option = st.selectbox(
+        option2 = st.selectbox(
             '',
             options=guilty_list,
             index=0,
             key="graph3_key",
             # format_func=lambda x: f'{x}년'
         )
-        print(f'option: {option}')
+        print(f'option: {option2}')
 
     with t4:
         st.markdown("### 범죄 유형별 발생 장소 Top5")
@@ -131,9 +131,9 @@ def show_graph2(layout):
     c1, c2 = layout.columns(2)
 
     with c1:
-        fig = create_plot2(option, c1)
+        fig = create_plot2(option1, c1)
         st.pyplot(fig)
 
     with c2:
-        fig = create_plot3(option, c2)
+        fig = create_plot3(option2, c2)
         st.pyplot(fig)
